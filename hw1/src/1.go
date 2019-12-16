@@ -13,5 +13,5 @@ func main() {
 	fmt.Scan(&rub)
 	fmt.Println("Вы указали:", rub, "рублей")
 	dollars = math.Round(rub / courseRubDollars)
-	fmt.Printf("Рассчитанные доллары: %.1f$", dollars)
+	fmt.Printf("Рассчитанные доллары: %.2f$", dollars)
 }
