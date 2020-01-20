@@ -1,22 +1,38 @@
 package main
 
 import (
-	"io"
+	"html/template"
+	"log"
 	"net/http"
 )
 
 func hello(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "text/html")
-	io.WriteString(res,
-		`<doctype html>
+
+	const tmpl = `<doctype html>
 <html>
 	<head>
     	<title>Hello World!</title>
+		<meta charset="utf-8">
 	</head>
 	<body>
     	Hello World!
+		<div>
+			Hello {{.Name}}!
+		</div>
 	</body>
-</html>`)
+</html>`
+
+	data := struct {
+		Name string
+	}{req.URL.Query().Get("name")}
+
+	t := template.Must(template.New("").Parse(tmpl))
+
+	err := t.Execute(res, data)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func main() {
@@ -24,5 +40,5 @@ func main() {
 	http.Handle("/", fs)
 	http.HandleFunc("/hello", hello)
 
-	http.ListenAndServe(":80", nil)
+	http.ListenAndServe(":8181", nil)
 }
